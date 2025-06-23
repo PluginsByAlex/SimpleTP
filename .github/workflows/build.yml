@@ -23,7 +23,7 @@ jobs:
         distribution: 'temurin'
         
     - name: Cache Maven dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -39,7 +39,7 @@ jobs:
       run: mvn package -DskipTests
       
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: SimpleTP-${{ github.sha }}
         path: target/*.jar
@@ -60,7 +60,7 @@ jobs:
         distribution: 'temurin'
         
     - name: Cache Maven dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -69,12 +69,16 @@ jobs:
     - name: Build release
       run: mvn clean package -DskipTests
       
+    - name: Get JAR file name
+      id: jar_name
+      run: echo "jar_file=$(ls target/SimpleTP-*.jar | head -n 1)" >> $GITHUB_OUTPUT
+      
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: target/SimpleTP-*.jar
+        asset_path: ${{ steps.jar_name.outputs.jar_file }}
         asset_name: SimpleTP-${{ github.event.release.tag_name }}.jar
         asset_content_type: application/java-archive 
