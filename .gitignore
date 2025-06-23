@@ -36,8 +36,8 @@ todo.md
 *.swp
 *~
 
-# Plugin data (don't commit server data)
-data/
+# Plugin runtime data (don't commit server data, but allow source code data packages)
+/data/
 plugins/
 server/
 world/
