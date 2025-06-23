@@ -1,19 +1,17 @@
-name: Build and Release
+name: Build Plugin
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ master, main ]
-  release:
-    types: [ created ]
+    branches: [ main, master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v4
       
     - name: Set up JDK 21
@@ -30,68 +28,22 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
         
     - name: Build with Maven
-      run: mvn clean compile test-compile
+      run: mvn clean package -DskipTests
       
-    - name: Run tests (if any)
-      run: mvn test || true
+    - name: List target directory
+      run: ls -la target/
       
-    - name: Package plugin
-      run: mvn package -DskipTests
-      
-    - name: Get version from POM
-      id: get_version
-      run: echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
-      
-    - name: Upload JAR artifact (always)
+    - name: Upload JAR as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: SimpleTP-${{ steps.get_version.outputs.version }}-${{ github.sha }}
-        path: target/*.jar
-        retention-days: 30
+        name: SimpleTP-plugin
+        path: target/SimpleTP-*.jar
+        if-no-files-found: error
         
-    - name: Upload latest JAR (main branch only)
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    - name: Upload latest build
+      if: github.ref == 'refs/heads/main'
       uses: actions/upload-artifact@v4
       with:
         name: SimpleTP-latest
-        path: target/*.jar
-        retention-days: 90
-        
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'release'
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        
-    - name: Cache Maven dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
-        
-    - name: Build release
-      run: mvn clean package -DskipTests
-      
-    - name: Get JAR file name
-      id: jar_name
-      run: echo "jar_file=$(ls target/SimpleTP-*.jar | head -n 1)" >> $GITHUB_OUTPUT
-      
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ${{ steps.jar_name.outputs.jar_file }}
-        asset_name: SimpleTP-${{ github.event.release.tag_name }}.jar
-        asset_content_type: application/java-archive 
+        path: target/SimpleTP-*.jar
+        if-no-files-found: error 
