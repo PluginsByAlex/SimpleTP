@@ -1,0 +1,30 @@
+# SimpleTP Configuration File
+
+# Enable or disable offline teleportation features
+# If disabled, commands like /bringoff, /gotooff, and /tpoff will be unavailable
+enable-offline-tp: true
+
+# Enable or disable bring all commands (/bringall and /bringalloff)
+# If disabled, these commands will not work
+enable-bringall: true
+
+# Allow console to use commands
+# If enabled, console can execute teleportation commands
+enable-console-commands: true
+
+# Enable debug mode for detailed logging
+# Useful for troubleshooting issues
+debug-mode: false
+
+# Messages (you can customize these)
+messages:
+  player-not-found: "&cPlayer not found!"
+  player-offline: "&cPlayer is offline!"
+  no-permission: "&cYou don't have permission to use this command!"
+  teleported: "&aYou have been teleported!"
+  teleported-player: "&a{player} has been teleported to you!"
+  teleported-to-player: "&aYou have been teleported to {player}!"
+  offline-tp-set: "&aOffline teleportation set for {player}. They will be teleported when they join!"
+  reload-success: "&aSimpleTP configuration reloaded!"
+  console-not-allowed: "&cThis command cannot be used from console!"
+  feature-disabled: "&cThis feature is disabled in the configuration!" 

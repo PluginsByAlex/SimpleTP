@@ -1,0 +1,89 @@
+name: SimpleTP
+version: ${project.version}
+main: com.example.simpletp.SimpleTP
+api-version: 1.21
+description: A simple teleportation plugin with offline player support
+author: RedditGuy
+website: https://github.com/yourusername/SimpleTP
+
+commands:
+  bring:
+    description: Teleport a player to you
+    usage: /<command> <player>
+    permission: SimpleTP.bring
+    permission-message: You don't have permission to use this command
+  
+  bringoff:
+    description: Set a teleport location for an offline player
+    usage: /<command> <player>
+    permission: SimpleTP.offline
+    permission-message: You don't have permission to use this command
+  
+  bringall:
+    description: Teleport all online players to you
+    usage: /<command>
+    permission: SimpleTP.bringall
+    permission-message: You don't have permission to use this command
+  
+  bringalloff:
+    description: Teleport all online and offline players to you
+    usage: /<command>
+    permission: SimpleTP.bringall
+    permission-message: You don't have permission to use this command
+  
+  goto:
+    description: Teleport to a player
+    usage: /<command> <player>
+    permission: SimpleTP.goto
+    permission-message: You don't have permission to use this command
+  
+  gotooff:
+    description: Teleport to an offline player's last location
+    usage: /<command> <player>
+    permission: SimpleTP.offline
+    permission-message: You don't have permission to use this command
+  
+  tpoff:
+    description: Teleport a player to another player (supports offline)
+    usage: /<command> <player1> <player2>
+    permission: SimpleTP.offline
+    permission-message: You don't have permission to use this command
+  
+  simpletp:
+    description: Main SimpleTP command and reload
+    usage: /<command> [reload]
+    permission: SimpleTP.admin
+    permission-message: You don't have permission to use this command
+
+permissions:
+  SimpleTP.bring:
+    description: Allows teleporting players to you
+    default: op
+  
+  SimpleTP.bringall:
+    description: Allows teleporting all players to you
+    default: op
+  
+  SimpleTP.goto:
+    description: Allows teleporting to other players
+    default: op
+  
+  SimpleTP.offline:
+    description: Allows offline teleportation features
+    default: op
+  
+  SimpleTP.admin:
+    description: Allows administrative commands like reload
+    default: op
+  
+  SimpleTP.*:
+    description: Gives access to all SimpleTP commands
+    default: op
+    children:
+      SimpleTP.bring: true
+      SimpleTP.bringall: true
+      SimpleTP.goto: true
+      SimpleTP.offline: true
+      SimpleTP.admin: true
+
+softdepend: [Multiverse-Core] 
